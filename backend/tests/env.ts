@@ -1,0 +1,15 @@
+process.env.NODE_ENV = 'test';
+process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/restaurant_soft_test';
+process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'test_access_secret_1234567890';
+process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test_refresh_secret_1234567890';
+process.env.JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || '15m';
+process.env.JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
+process.env.CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
+process.env.RATE_LIMIT_WINDOW_MS = process.env.RATE_LIMIT_WINDOW_MS || '900000';
+process.env.RATE_LIMIT_MAX = process.env.RATE_LIMIT_MAX || '1000';
+process.env.BCRYPT_ROUNDS = process.env.BCRYPT_ROUNDS || '4';
+process.env.VAT_DEFAULT_RATE = process.env.VAT_DEFAULT_RATE || '0.12';
+process.env.ARCHIVE_ORDER_DAYS = process.env.ARCHIVE_ORDER_DAYS || '365';
+process.env.LOW_STOCK_CRON = process.env.LOW_STOCK_CRON || '*/30 * * * *';
+process.env.REPORT_CRON = process.env.REPORT_CRON || '0 22 * * *';
+process.env.ENABLE_REDIS = process.env.ENABLE_REDIS || 'false';

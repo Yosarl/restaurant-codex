@@ -1,0 +1,97 @@
+{
+  "roles": [
+    { "name": "Super Admin", "permissions": ["*"] },
+    { "name": "Manager", "permissions": ["dashboard:read", "reports:read", "pos:create", "pos:settle", "inventory:read", "inventory:write"] },
+    { "name": "Chef", "permissions": ["kitchen:read", "kitchen:update"] },
+    { "name": "Cashier", "permissions": ["pos:create", "pos:hold", "pos:settle", "pos:return"] },
+    { "name": "Accountant", "permissions": ["accounting:read", "accounting:journal", "accounting:reconcile", "reports:read"] },
+    { "name": "Inventory Clerk", "permissions": ["inventory:read", "inventory:write", "inventory:adjust", "inventory:transfer", "purchase:create"] }
+  ],
+  "outlets": [
+    { "name": "Downtown Outlet", "address": "101 Main St", "timezone": "America/New_York", "printers": [{ "name": "Cashier Thermal", "type": "escpos", "target": "USB001", "isKitchen": false }] },
+    { "name": "Uptown Outlet", "address": "202 Broadway", "timezone": "America/New_York", "printers": [{ "name": "Kitchen Printer", "type": "escpos", "target": "USB002", "isKitchen": true }] },
+    { "name": "Airport Outlet", "address": "Terminal A", "timezone": "America/Chicago", "printers": [{ "name": "PDF Receipt", "type": "pdf", "target": "pdf://default", "isKitchen": false }] }
+  ],
+  "users": [
+    { "name": "Admin User", "email": "admin@restaurant.local", "password": "Admin@1234", "role": "Super Admin", "outlets": ["Downtown Outlet", "Uptown Outlet", "Airport Outlet"] },
+    { "name": "Maya Manager", "email": "manager@restaurant.local", "password": "Manager@123", "role": "Manager", "outlets": ["Downtown Outlet"] },
+    { "name": "Carlos Chef", "email": "chef@restaurant.local", "password": "Chef@12345", "role": "Chef", "outlets": ["Downtown Outlet"] },
+    { "name": "Nina Cashier", "email": "cashier@restaurant.local", "password": "Cashier@123", "role": "Cashier", "outlets": ["Downtown Outlet"] },
+    { "name": "Liam Accountant", "email": "acct@restaurant.local", "password": "Account@123", "role": "Accountant", "outlets": ["Downtown Outlet", "Uptown Outlet"] }
+  ],
+  "suppliers": [
+    { "name": "Fresh Farm Foods", "contact": { "phone": "+1-555-1001", "email": "sales@freshfarm.local" } },
+    { "name": "Prime Meats Co", "contact": { "phone": "+1-555-1002" } },
+    { "name": "City Bakery Supply", "contact": { "phone": "+1-555-1003" } },
+    { "name": "Ocean Catch", "contact": { "phone": "+1-555-1004" } },
+    { "name": "Veggie Hub", "contact": { "phone": "+1-555-1005" } },
+    { "name": "Dairy Plus", "contact": { "phone": "+1-555-1006" } },
+    { "name": "Spice Traders", "contact": { "phone": "+1-555-1007" } },
+    { "name": "Beverage World", "contact": { "phone": "+1-555-1008" } }
+  ],
+  "categories": [
+    "Ingredients",
+    "Burgers",
+    "Pizza",
+    "Drinks",
+    "Desserts",
+    "Sides"
+  ],
+  "products": [
+    { "sku": "ING-FLOUR", "name": "Flour", "category": "Ingredients", "costPrice": 2.1, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 15 },
+    { "sku": "ING-CHEESE", "name": "Cheese", "category": "Ingredients", "costPrice": 4.5, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 8 },
+    { "sku": "ING-CHICKEN", "name": "Chicken Breast", "category": "Ingredients", "costPrice": 6.2, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 10 },
+    { "sku": "ING-BEEF", "name": "Beef Patty", "category": "Ingredients", "costPrice": 1.8, "sellPrice": 0, "taxRate": 0, "unit": "piece", "isRecipe": false, "reorderLevel": 50 },
+    { "sku": "ING-BUN", "name": "Burger Bun", "category": "Ingredients", "costPrice": 0.3, "sellPrice": 0, "taxRate": 0, "unit": "piece", "isRecipe": false, "reorderLevel": 80 },
+    { "sku": "ING-TOMATO", "name": "Tomato", "category": "Ingredients", "costPrice": 1.9, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 8 },
+    { "sku": "ING-LETTUCE", "name": "Lettuce", "category": "Ingredients", "costPrice": 1.5, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 5 },
+    { "sku": "ING-FRIES", "name": "Frozen Fries", "category": "Ingredients", "costPrice": 1.2, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 12 },
+    { "sku": "ING-SODA", "name": "Soda Syrup", "category": "Ingredients", "costPrice": 10, "sellPrice": 0, "taxRate": 0, "unit": "ltr", "isRecipe": false, "reorderLevel": 6 },
+    { "sku": "ING-SUGAR", "name": "Sugar", "category": "Ingredients", "costPrice": 1.1, "sellPrice": 0, "taxRate": 0, "unit": "kg", "isRecipe": false, "reorderLevel": 10 },
+    { "sku": "MENU-CH-BURGER", "name": "Chicken Burger", "category": "Burgers", "costPrice": 0, "sellPrice": 8.5, "taxRate": 0.12, "unit": "portion", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-CHICKEN", "qty": 0.18 }, { "ingredientSku": "ING-BUN", "qty": 1 }, { "ingredientSku": "ING-LETTUCE", "qty": 0.02 }, { "ingredientSku": "ING-TOMATO", "qty": 0.03 }] },
+    { "sku": "MENU-BF-BURGER", "name": "Beef Burger", "category": "Burgers", "costPrice": 0, "sellPrice": 9.2, "taxRate": 0.12, "unit": "portion", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-BEEF", "qty": 1 }, { "ingredientSku": "ING-BUN", "qty": 1 }, { "ingredientSku": "ING-CHEESE", "qty": 0.03 }] },
+    { "sku": "MENU-MARGHERITA", "name": "Margherita Pizza", "category": "Pizza", "costPrice": 0, "sellPrice": 11.5, "taxRate": 0.12, "unit": "portion", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-FLOUR", "qty": 0.2 }, { "ingredientSku": "ING-CHEESE", "qty": 0.08 }, { "ingredientSku": "ING-TOMATO", "qty": 0.1 }] },
+    { "sku": "MENU-FRIES", "name": "French Fries", "category": "Sides", "costPrice": 0, "sellPrice": 3.2, "taxRate": 0.12, "unit": "portion", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-FRIES", "qty": 0.18 }] },
+    { "sku": "MENU-COKE", "name": "Coke", "category": "Drinks", "costPrice": 0, "sellPrice": 2.5, "taxRate": 0.12, "unit": "glass", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-SODA", "qty": 0.1 }] },
+    { "sku": "MENU-LEMONADE", "name": "Lemonade", "category": "Drinks", "costPrice": 0, "sellPrice": 2.8, "taxRate": 0.12, "unit": "glass", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-SUGAR", "qty": 0.02 }] },
+    { "sku": "MENU-ICECREAM", "name": "Ice Cream", "category": "Desserts", "costPrice": 1.4, "sellPrice": 4.2, "taxRate": 0.12, "unit": "cup", "isRecipe": false, "reorderLevel": 20 },
+    { "sku": "MENU-BROWNIE", "name": "Brownie", "category": "Desserts", "costPrice": 1.1, "sellPrice": 3.9, "taxRate": 0.12, "unit": "piece", "isRecipe": false, "reorderLevel": 25 },
+    { "sku": "MENU-COMBO-1", "name": "Burger Combo", "category": "Burgers", "costPrice": 0, "sellPrice": 12.9, "taxRate": 0.12, "unit": "set", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-CHICKEN", "qty": 0.18 }, { "ingredientSku": "ING-BUN", "qty": 1 }, { "ingredientSku": "ING-FRIES", "qty": 0.18 }, { "ingredientSku": "ING-SODA", "qty": 0.1 }] },
+    { "sku": "MENU-EXTRA-CHEESE", "name": "Extra Cheese Add-on", "category": "Sides", "costPrice": 0, "sellPrice": 1.5, "taxRate": 0.12, "unit": "addon", "isRecipe": true, "reorderLevel": 0, "recipe": [{ "ingredientSku": "ING-CHEESE", "qty": 0.02 }] }
+  ],
+  "openingBatches": [
+    { "sku": "ING-FLOUR", "qty": 30, "costPrice": 2.1, "batchNo": "OP-001" },
+    { "sku": "ING-CHEESE", "qty": 20, "costPrice": 4.5, "batchNo": "OP-002" },
+    { "sku": "ING-CHICKEN", "qty": 25, "costPrice": 6.2, "batchNo": "OP-003" },
+    { "sku": "ING-BEEF", "qty": 200, "costPrice": 1.8, "batchNo": "OP-004" },
+    { "sku": "ING-BUN", "qty": 300, "costPrice": 0.3, "batchNo": "OP-005" },
+    { "sku": "ING-TOMATO", "qty": 20, "costPrice": 1.9, "batchNo": "OP-006" },
+    { "sku": "ING-LETTUCE", "qty": 12, "costPrice": 1.5, "batchNo": "OP-007" },
+    { "sku": "ING-FRIES", "qty": 35, "costPrice": 1.2, "batchNo": "OP-008" },
+    { "sku": "ING-SODA", "qty": 18, "costPrice": 10, "batchNo": "OP-009" },
+    { "sku": "ING-SUGAR", "qty": 25, "costPrice": 1.1, "batchNo": "OP-010" }
+  ],
+  "purchaseOrders": [
+    { "supplier": "Fresh Farm Foods", "lines": [{ "sku": "ING-TOMATO", "qty": 12, "unitCost": 2.0 }, { "sku": "ING-LETTUCE", "qty": 8, "unitCost": 1.6 }] },
+    { "supplier": "Prime Meats Co", "lines": [{ "sku": "ING-CHICKEN", "qty": 18, "unitCost": 6.4 }, { "sku": "ING-BEEF", "qty": 150, "unitCost": 1.9 }] },
+    { "supplier": "Beverage World", "lines": [{ "sku": "ING-SODA", "qty": 10, "unitCost": 10.5 }] }
+  ],
+  "salesOrders": [
+    { "lines": [{ "sku": "MENU-CH-BURGER", "qty": 2 }, { "sku": "MENU-FRIES", "qty": 2 }, { "sku": "MENU-COKE", "qty": 2 }] },
+    { "lines": [{ "sku": "MENU-BF-BURGER", "qty": 1 }, { "sku": "MENU-LEMONADE", "qty": 1 }] },
+    { "lines": [{ "sku": "MENU-MARGHERITA", "qty": 1 }, { "sku": "MENU-COKE", "qty": 2 }] },
+    { "lines": [{ "sku": "MENU-COMBO-1", "qty": 2 }] },
+    { "lines": [{ "sku": "MENU-ICECREAM", "qty": 2 }, { "sku": "MENU-BROWNIE", "qty": 2 }] }
+  ],
+  "coa": [
+    { "code": "1100", "name": "Cash", "type": "asset" },
+    { "code": "1200", "name": "Accounts Receivable", "type": "asset" },
+    { "code": "1300", "name": "Inventory", "type": "asset" },
+    { "code": "2100", "name": "Accounts Payable", "type": "liability" },
+    { "code": "2200", "name": "VAT Payable", "type": "liability" },
+    { "code": "1150", "name": "VAT Input", "type": "asset" },
+    { "code": "4100", "name": "Sales Revenue", "type": "revenue" },
+    { "code": "5100", "name": "COGS", "type": "expense" },
+    { "code": "5200", "name": "Stock Adjustment Expense", "type": "expense" }
+  ]
+}

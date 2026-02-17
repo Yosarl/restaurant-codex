@@ -1,0 +1,331 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Restaurant Inventory POS Accounting API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:5000" }],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 8 }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": { "type": "string" },
+          "refreshToken": { "type": "string" }
+        }
+      },
+      "InventoryLine": {
+        "type": "object",
+        "required": ["productId", "qty", "costPrice", "batchNo"],
+        "properties": {
+          "productId": { "type": "string" },
+          "qty": { "type": "number", "exclusiveMinimum": 0 },
+          "costPrice": { "type": "number", "minimum": 0 },
+          "batchNo": { "type": "string" },
+          "expiryDate": { "type": "string", "format": "date-time" }
+        }
+      },
+      "PosOrderLine": {
+        "type": "object",
+        "required": ["productId", "qty"],
+        "properties": {
+          "productId": { "type": "string" },
+          "qty": { "type": "number", "exclusiveMinimum": 0 },
+          "unitPrice": { "type": "number", "minimum": 0 },
+          "mods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "priceDelta"],
+              "properties": {
+                "name": { "type": "string" },
+                "priceDelta": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } } },
+        "responses": { "200": { "description": "JWT issued", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } } }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "required": ["refreshToken"], "properties": { "refreshToken": { "type": "string" } } }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Refreshed" } }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "required": ["refreshToken"], "properties": { "refreshToken": { "type": "string" } } }
+            }
+          }
+        },
+        "responses": { "204": { "description": "Logged out" } }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password", "roleId", "outlets"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 2 },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "minLength": 10 },
+                  "roleId": { "type": "string" },
+                  "outlets": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "User created" } }
+      }
+    },
+    "/api/users": {
+      "get": { "tags": ["Users"], "responses": { "200": { "description": "Users list" } } },
+      "post": { "tags": ["Users"], "responses": { "201": { "description": "User created" } } }
+    },
+    "/api/users/{id}": {
+      "patch": {
+        "tags": ["Users"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "User updated" } }
+      }
+    },
+    "/api/roles": {
+      "get": { "tags": ["Users"], "responses": { "200": { "description": "Roles list" } } }
+    },
+    "/api/outlets": {
+      "get": { "tags": ["Outlets"], "responses": { "200": { "description": "Outlets" } } },
+      "post": { "tags": ["Outlets"], "responses": { "201": { "description": "Outlet created" } } }
+    },
+    "/api/outlets/{id}": {
+      "patch": {
+        "tags": ["Outlets"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Outlet updated" } }
+      }
+    },
+    "/api/products": {
+      "get": { "tags": ["Products"], "responses": { "200": { "description": "Products list" } } },
+      "post": { "tags": ["Products"], "responses": { "201": { "description": "Product created" } } }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Product" } }
+      },
+      "patch": {
+        "tags": ["Products"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Product updated" } }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "Deleted" } }
+      }
+    },
+    "/api/products/{id}/stock": {
+      "get": {
+        "tags": ["Products"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Stock" } }
+      }
+    },
+    "/api/inventory/opening-stock": {
+      "post": {
+        "tags": ["Inventory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["outletId", "lines"],
+                "properties": {
+                  "outletId": { "type": "string" },
+                  "lines": { "type": "array", "items": { "$ref": "#/components/schemas/InventoryLine" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/api/inventory/receive": {
+      "post": {
+        "tags": ["Inventory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["outletId", "lines"],
+                "properties": {
+                  "outletId": { "type": "string" },
+                  "lines": { "type": "array", "items": { "$ref": "#/components/schemas/InventoryLine" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Received" } }
+      }
+    },
+    "/api/inventory/adjustment": {
+      "post": {
+        "tags": ["Inventory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["outletId", "productId", "qty", "reason"],
+                "properties": {
+                  "outletId": { "type": "string" },
+                  "productId": { "type": "string" },
+                  "qty": { "type": "number", "not": { "const": 0 } },
+                  "reason": { "type": "string", "minLength": 3 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Adjusted" } }
+      }
+    },
+    "/api/inventory/transfer": {
+      "post": {
+        "tags": ["Inventory"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["fromOutletId", "toOutletId", "productId", "qty"],
+                "properties": {
+                  "fromOutletId": { "type": "string" },
+                  "toOutletId": { "type": "string" },
+                  "productId": { "type": "string" },
+                  "qty": { "type": "number", "exclusiveMinimum": 0 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Transferred" } }
+      }
+    },
+    "/api/inventory/valuation": { "get": { "tags": ["Inventory"], "responses": { "200": { "description": "Valuation" } } } },
+    "/api/inventory/ageing": { "get": { "tags": ["Inventory"], "responses": { "200": { "description": "Ageing" } } } },
+    "/api/purchase/orders": {
+      "post": { "tags": ["Purchase"], "responses": { "201": { "description": "PO created" } } },
+      "get": { "tags": ["Purchase"], "responses": { "200": { "description": "PO list" } } }
+    },
+    "/api/purchase/invoices": { "post": { "tags": ["Purchase"], "responses": { "201": { "description": "Invoice created" } } } },
+    "/api/purchase/returns": { "post": { "tags": ["Purchase"], "responses": { "201": { "description": "Purchase return created" } } } },
+    "/api/pos/create-order": {
+      "post": {
+        "tags": ["POS"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["outletId", "orderType", "orderLines", "createdBy"],
+                "properties": {
+                  "outletId": { "type": "string" },
+                  "orderType": { "type": "string", "enum": ["dine-in", "take-away", "delivery"] },
+                  "orderLines": { "type": "array", "items": { "$ref": "#/components/schemas/PosOrderLine" } },
+                  "createdBy": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Order created" } }
+      }
+    },
+    "/api/pos/hold-order": { "post": { "tags": ["POS"], "responses": { "201": { "description": "Order held" } } } },
+    "/api/pos/recall-order": { "post": { "tags": ["POS"], "responses": { "200": { "description": "Order recalled" } } } },
+    "/api/pos/settle": { "post": { "tags": ["POS"], "responses": { "200": { "description": "Order settled" } } } },
+    "/api/pos/return": { "post": { "tags": ["POS"], "responses": { "200": { "description": "Order returned" } } } },
+    "/api/pos/shift/{id}/report": {
+      "get": {
+        "tags": ["POS"],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Shift report" } }
+      }
+    },
+    "/api/accounting/coa": { "get": { "tags": ["Accounting"], "responses": { "200": { "description": "COA" } } } },
+    "/api/accounting/journal": { "post": { "tags": ["Accounting"], "responses": { "201": { "description": "Journal posted" } } } },
+    "/api/accounting/ledger/{accountId}": {
+      "get": {
+        "tags": ["Accounting"],
+        "parameters": [{ "name": "accountId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Ledger" } }
+      }
+    },
+    "/api/accounting/reconcile": { "post": { "tags": ["Accounting"], "responses": { "200": { "description": "Reconciled" } } } },
+    "/api/webhooks/payment/{provider}": {
+      "post": {
+        "tags": ["Webhooks"],
+        "parameters": [{ "name": "provider", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "202": { "description": "Accepted" } }
+      }
+    },
+    "/api/reports/sales": { "get": { "tags": ["Reports"], "responses": { "200": { "description": "Sales report" } } } },
+    "/api/reports/stock/valuation": { "get": { "tags": ["Reports"], "responses": { "200": { "description": "Stock valuation" } } } },
+    "/api/reports/pnl": { "get": { "tags": ["Reports"], "responses": { "200": { "description": "P&L" } } } },
+    "/api/reports/vat": { "get": { "tags": ["Reports"], "responses": { "200": { "description": "VAT report" } } } }
+  }
+}
