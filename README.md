@@ -113,6 +113,17 @@ Production-oriented MERN monorepo for multi-outlet restaurant operations with in
 - PM2 alternative: `pm2 start ecosystem.config.js`
 - HTTPS reverse proxy (auto TLS): `caddy/Caddyfile`
 
+## Render Deployment
+- Blueprint file: `render.yaml`
+- Deploy with Render Blueprint to create:
+  - `restaurant-backend` (Node web service)
+  - `restaurant-frontend` (Static site)
+- Required backend envs on Render:
+  - `MONGO_URI` (use MongoDB Atlas or external Mongo, not `mongo` hostname)
+  - `JWT_ACCESS_SECRET`
+  - `JWT_REFRESH_SECRET`
+  - `CORS_ORIGIN` (set to your Render frontend URL)
+
 ## Backup & Retention
 - Daily DB backup script: `scripts/backup.ps1`
 - Configurable retention in script parameter (`RetentionDays`).

@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: restaurant-backend
+    env: node
+    rootDir: backend
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX
+        value: 300
+      - key: BCRYPT_ROUNDS
+        value: 12
+      - key: VAT_DEFAULT_RATE
+        value: 0.12
+      - key: ARCHIVE_ORDER_DAYS
+        value: 365
+      - key: LOW_STOCK_CRON
+        value: "*/30 * * * *"
+      - key: REPORT_CRON
+        value: "0 22 * * *"
+      - key: ENABLE_REDIS
+        value: false
+
+  - type: web
+    name: restaurant-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
