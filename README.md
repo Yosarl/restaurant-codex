@@ -109,9 +109,9 @@ Production-oriented MERN monorepo for multi-outlet restaurant operations with in
 - Deployment guide: `docs/deployment.md`
 
 ## Deployment
-- Docker production: `docker compose -f docker-compose.prod.yml up -d`
+- Docker production (one command): `bash scripts/deploy.sh`
 - PM2 alternative: `pm2 start ecosystem.config.js`
-- Reverse proxy: `nginx/nginx.conf`
+- HTTPS reverse proxy (auto TLS): `caddy/Caddyfile`
 
 ## Backup & Retention
 - Daily DB backup script: `scripts/backup.ps1`

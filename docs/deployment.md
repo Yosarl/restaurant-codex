@@ -6,24 +6,26 @@ Use `.env.example` as reference. Required production values:
 - `JWT_ACCESS_SECRET`
 - `JWT_REFRESH_SECRET`
 - `CORS_ORIGIN`
+- `DOMAIN`
+- `LETSENCRYPT_EMAIL`
+- `BACKEND_IMAGE`
+- `FRONTEND_IMAGE`
 - Mail credentials if scheduled email reports are enabled.
 
 ## Docker Compose (Production)
 1. Build/publish images from CI or local.
-2. Update `docker-compose.prod.yml` image tags.
-3. Configure `.env` with production secrets.
-4. Start stack:
-   - `docker compose -f docker-compose.prod.yml up -d`
-5. Verify:
-   - `curl http://<host>/health`
+2. Set image tags and secrets in `.env`.
+3. Run one-command deployment:
+   - `bash scripts/deploy.sh`
+4. Verify:
+   - `curl https://<domain>/api/docs`
 
-## Nginx
-- Config file: `nginx/nginx.conf`
+## HTTPS Proxy (Caddy)
+- Config file: `caddy/Caddyfile`
 - Responsibilities:
   - reverse proxy `/api` and `/socket.io`
-  - gzip compression
-  - static caching hints
-- For HTTPS: terminate TLS at Nginx and redirect HTTP -> HTTPS.
+  - gzip/zstd compression
+  - automatic Let's Encrypt certificate issuance and renewal
 
 ## PM2 Alternative (Backend)
 1. Build backend: `npm run build --workspace backend`
@@ -37,6 +39,11 @@ Workflow: `.github/workflows/ci.yml`
 - Test
 - Build
 - Build and push Docker images to GHCR on `main`
+
+## Initial Server Setup
+1. Install Docker Engine + Docker Compose plugin.
+2. Open firewall ports `80` and `443`.
+3. Ensure DNS `A` record points `DOMAIN` to server IP.
 
 ## Backup and Retention
 - Script: `scripts/backup.ps1`

@@ -1,0 +1,21 @@
+{
+  email {$LETSENCRYPT_EMAIL}
+}
+
+{$DOMAIN} {
+  encode gzip zstd
+
+  @api path /api/*
+  handle @api {
+    reverse_proxy backend:5000
+  }
+
+  @socket path /socket.io/*
+  handle @socket {
+    reverse_proxy backend:5000
+  }
+
+  handle {
+    reverse_proxy frontend:4173
+  }
+}
