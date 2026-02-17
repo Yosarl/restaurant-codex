@@ -27,6 +27,8 @@ services:
       - redis
     env_file:
       - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/restaurant_soft
     ports:
       - "5000:5000"
     volumes:

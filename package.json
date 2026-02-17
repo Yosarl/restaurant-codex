@@ -12,5 +12,8 @@
     "test": "npm run test --workspace backend && npm run test --workspace frontend",
     "lint": "npm run lint --workspace backend && npm run lint --workspace frontend",
     "seed": "npm run seed --workspace backend"
+  },
+  "dependencies": {
+    "all": "^0.0.0"
   }
 }
